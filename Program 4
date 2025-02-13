@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <ctype.h>
+
+
+void lexicalAnalyzer(char *input) {
+    int i = 0;
+
+    
+    while (input[i] != '\0') {
+       
+        if (isspace(input[i])) {
+            i++;
+            continue;
+        }
+
+        
+        if (input[i] == '+') {
+            printf("Operator: +\n");
+        } else if (input[i] == '-') {
+            printf("Operator: -\n");
+        } else if (input[i] == '*') {
+            printf("Operator: *\n");
+        } else if (input[i] == '/') {
+            printf("Operator: /\n");
+        } else {
+            
+            printf("Invalid character: %c\n", input[i]);
+        }
+
+        i++;
+    }
+}
+
+int main() {
+    char input[100];
+
+    printf("Enter a string of operators and other characters: ");
+    fgets(input, sizeof(input), stdin);  
+
+    lexicalAnalyzer(input);  
+
+    return 0;
+}
