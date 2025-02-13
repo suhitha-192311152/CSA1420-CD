@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_RULES 10
+#define MAX_SYMBOLS 50
+
+
+typedef struct {
+    char lhs;                  
+    char rhs[MAX_SYMBOLS];     
+} Production;
+
+
+Production productions[MAX_RULES];
+int numProductions = 0;
+char nonTerminals[MAX_RULES];  
+
+
+int isTerminal(char symbol) {
+    return !isupper(symbol);  
+}
+
+int isInFirstSet(char *firstSet, char symbol) {
+    for (int i = 0; firstSet[i] != '\0'; i++) {
+        if (firstSet[i] == symbol) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+void computeFirst(char nonTerminal, char *firstSet) {
+    
+    for (int i = 0; i < numProductions; i++) {
+        if (productions[i].lhs == nonTerminal) {
+            
+            for (int j = 0; productions[i].rhs[j] != '\0'; j++) {
+                char symbol = productions[i].rhs[j];
+                
+                
+                if (isTerminal(symbol)) {
+                    if (!isInFirstSet(firstSet, symbol)) {
+                        firstSet[strlen(firstSet)] = symbol;  
+                        firstSet[strlen(firstSet)] = '\0';   
+                    }
+                    break;
+                } 
+               
+                else {
+                    char tempSet[MAX_SYMBOLS] = "";
+                    computeFirst(symbol, tempSet);
+
+                   
+                    for (int k = 0; tempSet[k] != '\0'; k++) {
+                        if (!isInFirstSet(firstSet, tempSet[k])) {
+                            firstSet[strlen(firstSet)] = tempSet[k];
+                            firstSet[strlen(firstSet)] = '\0';
+                        }
+                    }
+                    
+                    if (!isInFirstSet(tempSet, 'e')) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void printFirstSets() {
+    printf("\nFIRST sets for the grammar:\n");
+    for (int i = 0; i < numProductions; i++) {
+        if (productions[i].lhs != '\0') {
+            printf("FIRST(%c) = {", productions[i].lhs);
+            char firstSet[MAX_SYMBOLS] = "";
+            computeFirst(productions[i].lhs, firstSet);
+            for (int j = 0; firstSet[j] != '\0'; j++) {
+                if (j > 0) printf(", ");
+                printf("%c", firstSet[j]);
+            }
+            printf("}\n");
+        }
+    }
+}
+
+int main() {
+    printf("Enter the number of production rules: ");
+    scanf("%d", &numProductions);
+    getchar(); 
+
+    
+    for (int i = 0; i < numProductions; i++) {
+        printf("Enter production rule %d (in the form A->abc): ", i + 1);
+        fgets(productions[i].rhs, MAX_SYMBOLS, stdin);
+        productions[i].rhs[strcspn(productions[i].rhs, "\n")] = '\0';  
+        productions[i].lhs = productions[i].rhs[0];  
+    }
+
+   
+    printFirstSets();
+
+    return 0;
+}
