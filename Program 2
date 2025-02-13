@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+
+bool isSingleLineComment(char *line) {
+    char *commentStart = strstr(line, "//");  
+    if (commentStart != NULL) {
+        return true; 
+    }
+    return false; 
+}
+
+
+bool isMultiLineComment(char *line) {
+    char *commentStart = strstr(line, "/*");  
+    char *commentEnd = strstr(line, "*/");    
+    
+    if (commentStart != NULL && commentEnd != NULL && commentStart < commentEnd) {
+        return true; 
+    }
+    return false; 
+}
+
+
+void lexicalAnalyzer(char *line) {
+    
+    char *start = line;
+    while (*start == ' ' || *start == '\t') {
+        start++;
+    }
+
+    char *end = line + strlen(line) - 1;
+    while (*end == ' ' || *end == '\t') {
+        end--;
+    }
+    *(end + 1) = '\0';  
+
+    
+    if (isSingleLineComment(start)) {
+        printf("This is a single-line comment.\n");
+    } else if (isMultiLineComment(start)) {
+        printf("This is a multi-line comment.\n");
+    } else {
+        printf("This is not a comment.\n");
+    }
+}
+
+int main() {
+    char line[200];
+
+    printf("Enter a line of code: ");
+    fgets(line, sizeof(line), stdin); 
+
+    lexicalAnalyzer(line);  
+
+    return 0;
+}
