@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <ctype.h>
+
+
+void lexicalAnalyzer(char *input) {
+    int whiteSpaceCount = 0;
+    int newLineCount = 0;
+    int i = 0;
+
+    
+    while (input[i] != '\0') {
+        if (isspace(input[i])) {
+            whiteSpaceCount++; 
+        }
+        if (input[i] == '\n') {
+            newLineCount++; 
+        }
+        i++;
+    }
+
+    
+    printf("Number of whitespace characters: %d\n", whiteSpaceCount);
+    printf("Number of newline characters: %d\n", newLineCount);
+}
+
+int main() {
+    char input[500];
+
+    
+    printf("Enter a string (use EOF or press Enter to finish input):\n");
+    while (fgets(input, sizeof(input), stdin) != NULL) {
+        lexicalAnalyzer(input);  
+    }
+
+    return 0;
+}
