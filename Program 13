@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+char input[MAX];
+char stack[MAX];
+int top = -1;
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+int isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+int isTerminal(char c) {
+    return (c >= 'a' && c <= 'z');
+}
+
+void parse() {
+    int i = 0;
+    push('$');
+    push('E');
+
+    while (top != -1) {
+        char stackTop = pop();
+        char currentInput = input[i];
+
+        if (stackTop == currentInput) {
+            i++;
+        } else if (isOperator(stackTop)) {
+            // Handle operators
+            if (currentInput == '+' || currentInput == '-') {
+                push('E');
+                push(stackTop);
+            } else {
+                printf("Error: Invalid input\n");
+                return;
+            }
+        } else if (isTerminal(stackTop)) {
+            printf("Error: Invalid input\n");
+            return;
+        } else {
+            printf("Error: Invalid stack symbol\n");
+            return;
+        }
+    }
+
+    if (input[i] == '\0') {
+        printf("Input string is accepted\n");
+    } else {
+        printf("Input string is rejected\n");
+    }
+}
+
+int main() {
+    printf("Enter the input string: ");
+    scanf("%s", input);
+    parse();
+    return 0;
+}
