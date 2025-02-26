@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+char *grammar[MAX];
+int numProductions = 0;
+
+void addProduction(char *production) {
+    grammar[numProductions] = (char *)malloc(strlen(production) + 1);
+    strcpy(grammar[numProductions], production);
+    numProductions++;
+}
+
+void displayProductions() {
+    printf("Grammar Productions:\n");
+    for (int i = 0; i < numProductions; i++) {
+        printf("%s\n", grammar[i]);
+    }
+}
+
+void computeLeading() {
+    // Placeholder for leading computation logic
+    printf("Computing LEADING()...\n");
+    // Actual implementation would go here
+}
+
+int main() {
+    char production[MAX];
+
+    printf("Enter the number of productions: ");
+    scanf("%d", &numProductions);
+    getchar(); // to consume newline character
+
+    for (int i = 0; i < numProductions; i++) {
+        printf("Enter production %d: ", i + 1);
+        fgets(production, MAX, stdin);
+        production[strcspn(production, "\n")] = 0; // Remove newline character
+        addProduction(production);
+    }
+
+    displayProductions();
+    computeLeading();
+
+    // Free allocated memory
+    for (int i = 0; i < numProductions; i++) {
+        free(grammar[i]);
+    }
+
+    return 0;
+}
