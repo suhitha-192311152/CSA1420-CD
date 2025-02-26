@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+typedef struct {
+    char op[3];
+    char arg1[10];
+    char arg2[10];
+    char result[10];
+} TAC;
+
+TAC tac[MAX];
+int tacIndex = 0;
+
+void generateTAC(char *op, char *arg1, char *arg2, char *result) {
+    strcpy(tac[tacIndex].op, op);
+    strcpy(tac[tacIndex].arg1, arg1);
+    strcpy(tac[tacIndex].arg2, arg2);
+    strcpy(tac[tacIndex].result, result);
+    tacIndex++;
+}
+
+void printTAC() {
+    printf("Three Address Code:\n");
+    for (int i = 0; i < tacIndex; i++) {
+        printf("%s = %s %s %s\n", tac[i].result, tac[i].arg1, tac[i].op, tac[i].arg2);
+    }
+}
+
+int main() {
+    char input[100];
+    printf("Enter the input statement (e.g., a = b + c): ");
+    fgets(input, sizeof(input), stdin);
+
+    char var1[10], var2[10], var3[10], op[3], result[10];
+    sscanf(input, "%s = %s %s %s", result, var2, op, var3);
+
+    generateTAC(op, var2, var3, result);
+    printTAC();
+
+    return 0;
+}
