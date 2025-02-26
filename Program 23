@@ -1,0 +1,17 @@
+# Mobile Number Validation using LEX
+
+%%
+
+[0-9]{10}    { printf("Valid mobile number: %s\n", yytext); }
+.            { printf("Invalid mobile number: %s\n", yytext); }
+
+%% 
+
+int main(int argc, char **argv) {
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
