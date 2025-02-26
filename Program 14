@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+char stack[MAX][MAX];
+int top = -1;
+
+void push(char *item) {
+    if (top < MAX - 1) {
+        top++;
+        strcpy(stack[top], item);
+    }
+}
+
+char* pop() {
+    if (top >= 0) {
+        return stack[top--];
+    }
+    return NULL;
+}
+
+void displayStack() {
+    for (int i = top; i >= 0; i--) {
+        printf("%s\n", stack[i]);
+    }
+}
+
+int isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+void shift(char *input, int *index) {
+    printf("Shift: %c\n", input[*index]);
+    char item[2] = {input[*index], '\0'};
+    push(item);
+    (*index)++;
+}
+
+void reduce() {
+    char *op1 = pop();
+    char *operator = pop();
+    char *op2 = pop();
+    
+    printf("Reduce: %s %s %s\n", op2, operator, op1);
+    
+    char result[3] = {'R', '1', '\0'};
+    push(result);
+}
+
+int main() {
+    char input[MAX];
+    printf("Enter the input string: ");
+    scanf("%s", input);
+    
+    int index = 0;
+    while (input[index] != '\0') {
+        if (isOperator(input[index])) {
+            shift(input, &index);
+        } else {
+            if (top >= 1) {
+                reduce();
+            } else {
+                shift(input, &index);
+            }
+        }
+        displayStack();
+    }
+    
+    while (top > 0) {
+        reduce();
+        displayStack();
+    }
+    
+    return 0;
+}
