@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 10
+#define MAX_PROD 10
+
+char productions[MAX][MAX_PROD];
+char newProductions[MAX][MAX_PROD];
+int numProductions = 0;
+
+void eliminateLeftRecursion() {
+    for (int i = 0; i < numProductions; i++) {
+        char *prod = productions[i];
+        char nonTerminal = prod[0];
+        char *alpha = NULL;
+        char *beta = NULL;
+        int j = 3; // Skip the non-terminal and arrow
+
+        while (prod[j] != '\0') {
+            if (prod[j] == nonTerminal) {
+                if (alpha == NULL) {
+                    alpha = &prod[j];
+                }
+            } else {
+                if (beta == NULL) {
+                    beta = &prod[j];
+                }
+            }
+            j++;
+        }
+
+        if (alpha != NULL) {
+            char newNonTerminal = nonTerminal + 1; // New non-terminal
+            sprintf(newProductions[numProductions++], "%c -> %s%c'", nonTerminal, beta, newNonTerminal);
+            sprintf(newProductions[numProductions++], "%c' -> %s%c' | ε", newNonTerminal, alpha, newNonTerminal);
+        } else {
+            strcpy(newProductions[numProductions++], prod);
+        }
+    }
+}
+
+void printProductions() {
+    for (int i = 0; i < numProductions; i++) {
+        printf("%s\n", newProductions[i]);
+    }
+}
+
+int main() {
+    printf("Enter number of productions: ");
+    scanf("%d", &numProductions);
+    printf("Enter productions (format: A -> aA | b):\n");
+    for (int i = 0; i < numProductions; i++) {
+        scanf("%s", productions[i]);
+    }
+
+    eliminateLeftRecursion();
+    printf("Productions after eliminating left recursion:\n");
+    printProductions();
+
+    return 0;
+}
