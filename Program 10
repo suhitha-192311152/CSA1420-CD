@@ -1,0 +1,44 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 10
+#define MAX_PRODUCTIONS 10
+
+char productions[MAX][MAX];
+char newProductions[MAX][MAX];
+int numProductions = 0;
+
+void eliminateLeftFactoring() {
+    for (int i = 0; i < numProductions; i++) {
+        char *prod = productions[i];
+        char firstChar = prod[0];
+        int j = i + 1;
+        int k = 0;
+
+        while (j < numProductions && productions[j][0] == firstChar) {
+            newProductions[k++] = productions[j];
+            j++;
+        }
+
+        if (k > 0) {
+            printf("Left factoring for production %s:\n", prod);
+            printf("New productions: ");
+            for (int l = 0; l < k; l++) {
+                printf("%s ", newProductions[l]);
+            }
+            printf("\n");
+        }
+    }
+}
+
+int main() {
+    printf("Enter number of productions: ");
+    scanf("%d", &numProductions);
+    printf("Enter the productions:\n");
+    for (int i = 0; i < numProductions; i++) {
+        scanf("%s", productions[i]);
+    }
+
+    eliminateLeftFactoring();
+    return 0;
+}
